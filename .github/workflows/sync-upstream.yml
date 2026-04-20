@@ -1,0 +1,22 @@
+name: Sync Fork
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # 每天 UTC 时间凌晨 2 点自动运行
+  workflow_dispatch: # 允许你手动点击按钮触发运行
+
+permissions:
+  contents: write # 赋予写入仓库的权限
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Sync with upstream
+        run: |
+          gh repo sync ${{ github.repository }} --force
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
